@@ -1,7 +1,7 @@
 # NASA-TLXのプロトタイプ
 # 2023/10/30 @Chansei
 
-VERSION = "1.0"
+VERSION = "1.1"
 
 import csv
 import logging
@@ -35,7 +35,7 @@ logger = logging.getLogger()
 class NASATLXApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("NASA-TLXアンケート")
+        self.title(f"NASA-TLX(v{VERSION})")
         # self.iconbitmap('icon.ico')
         self.geometry("1920x1080")
         # self.attributes("-fullscreen", 1)
@@ -229,6 +229,8 @@ class NASATLXApp(ctk.CTk):
         self.destroy()
 
 if __name__ == "__main__":
+    print(f"NASA-TLX(v{VERSION})")
+    print("2021/10/31 @Chansei")
     try:
         app = NASATLXApp()
         app.mainloop()
