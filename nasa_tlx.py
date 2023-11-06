@@ -1,7 +1,8 @@
 # NASA-TLXのプロトタイプ
-# 2023/10/30 @Chansei
+# 2023/11/6 @Chansei
 
 VERSION = "1.2"
+DATE = "2023/11/6"
 
 import argparse
 import csv
@@ -244,8 +245,11 @@ class NASATLXApp(ctk.CTk):
         self.destroy()
 
 if __name__ == "__main__":
+    print("******************************************")
     print(f"NASA-TLX(v{VERSION})")
-    print("2021/10/31 @Chansei")
+    print(f"{DATE} @Chansei")
+    print("https://github.com/chansei/nasa_tlx/")
+    print("******************************************")
     try:
         app = NASATLXApp()
         app.mainloop()
