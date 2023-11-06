@@ -1,8 +1,9 @@
 # NASA-TLXのプロトタイプ
 # 2023/10/30 @Chansei
 
-VERSION = "1.1"
+VERSION = "1.2"
 
+import argparse
 import csv
 import logging
 import random
@@ -37,9 +38,23 @@ class NASATLXApp(ctk.CTk):
         super().__init__()
         self.title(f"NASA-TLX(v{VERSION})")
         # self.iconbitmap('icon.ico')
-        self.geometry("1920x1080")
-        # self.attributes("-fullscreen", 1)
-        ctk.set_appearance_mode("light")
+        # 引数の設定
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--wraplength", "-wl", type=int, default=800) # 改行サイズ
+        parser.add_argument("--fullscreen", "-f", action="store_true") # フルスクリーン
+        parser.add_argument("--darkmode", "-d", action="store_true") # ダークモード
+        self.args = parser.parse_args()
+        logger.info(f"args:{self.args}")
+
+        if self.args.fullscreen:
+            self.attributes("-fullscreen", 1)
+        else:
+            self.geometry("1920x1080")
+        if self.args.darkmode:
+            ctk.set_appearance_mode("dark")
+        else:
+            ctk.set_appearance_mode("light")
+
         ctk.set_default_color_theme("blue")
 
         # 上部フレームの設定
@@ -135,12 +150,12 @@ class NASATLXApp(ctk.CTk):
         self.var.set(0)
         radio1 = ctk.CTkRadioButton(self.bottom_frame, text=scale1, variable=self.var, value=1, font=("Meiryo", 20), height=250, command=lambda: self.next_pair([scale1, scale2]))
         radio1.grid(row=1, column=0, padx=10, pady=10, sticky="ns")
-        desc1 = ctk.CTkLabel(self.bottom_frame, text=descriptions[scales.index(scale1)], wraplength=800, font=("Meiryo", 20))
+        desc1 = ctk.CTkLabel(self.bottom_frame, text=descriptions[scales.index(scale1)], wraplength=self.args.wraplength, font=("Meiryo", 20))
         desc1.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 
         radio2 = ctk.CTkRadioButton(self.bottom_frame, text=scale2, variable=self.var, value=2, font=("Meiryo", 20), height=250, command=lambda: self.next_pair([scale1, scale2]))
         radio2.grid(row=2, column=0, padx=10, pady=10, sticky="ns")
-        desc2 = ctk.CTkLabel(self.bottom_frame, text=descriptions[scales.index(scale2)], wraplength=800, font=("Meiryo", 20))
+        desc2 = ctk.CTkLabel(self.bottom_frame, text=descriptions[scales.index(scale2)], wraplength=self.args.wraplength, font=("Meiryo", 20))
         desc2.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
 
         progress = (self.current_pair_idx + 1) / len(self.scale_pairs)
@@ -180,14 +195,14 @@ class NASATLXApp(ctk.CTk):
         for idx, scale in enumerate(scales):
             scale_label = ctk.CTkLabel(self.bottom_frame, text=scale, font=("Meiryo", 20))
             scale_label.grid(row=idx*2, column=0, padx=10, pady=0)
-            scale_description = ctk.CTkLabel(self.bottom_frame, text=descriptions[idx], wraplength=1600, font=("Meiryo", 12))
+            scale_description = ctk.CTkLabel(self.bottom_frame, text=descriptions[idx], wraplength=self.args.wraplength, font=("Meiryo", 12))
             scale_description.grid(row=idx*2, column=1, padx=10, pady=0, sticky="nsew")
             _label = ctk.CTkLabel(self.bottom_frame, text="低い", font=("Meiryo", 12))
             _label.grid(row=idx*2+1, column=0, padx=10, pady=0)
             sliders.append(ctk.CTkSlider(self.bottom_frame, height=20, from_=0))
             sliders[idx].grid(row=idx*2+1, column=1, padx=10, pady=0, sticky="ew")
             _label = ctk.CTkLabel(self.bottom_frame, text="高い", font=("Meiryo", 12))
-            _label.grid(row=idx*2+1, column=3, padx=10, pady=0)
+            _label.grid(row=idx*2+1, column=2, padx=10, pady=0)
         
         self.tlx_compare_show_button = ctk.CTkButton(self.bottom_frame, text="完了", font=("Meiryo", 12), command=lambda: self.next_task(sliders))
         self.tlx_compare_show_button.grid(row=12, column=3, padx=20, pady=10)
